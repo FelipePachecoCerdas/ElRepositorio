@@ -1,0 +1,1413 @@
+swagger: '2.0'
+info:
+  description: |
+    API for the KG Social Hub website and mobile app
+  version: 1.0.0
+  title: KG Social Hub
+  contact:
+    email: apiteam@swagger.io
+# host: petstore.swagger.io
+# basePath: /v2
+tags:
+- name: login
+  description: Login into the system
+- name: category
+  description: CRUD operations for the Category entity
+- name: eventType
+  description: CRUD operations for the EventType entity
+- name: user
+  description: CRUD operations for the User entity
+- name: office
+  description: CRUD operations for the Office entity
+- name: myEvents
+  description: Gets past and future user events
+- name: event
+  description: CRUD operations for the Event entity
+- name: eventMedia
+  description: CRUD operations for the EventMedia entity
+- name: eventGroup
+  description: CRUD operations for the EventGroup entity
+# schemes:
+# - http
+paths:
+
+  /myEvents/past:
+    get:
+      tags: 
+      - myEvents
+      summary: Gets user past events
+      description: Gets the user past events sorted descending by date
+      operationId: myEventsPastGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Number of events to fetch
+        required: true
+        schema:
+          $ref: '#/definitions/Quantity'
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+            $ref: '#/definitions/MiniEvent'
+        400:
+          description: Invalid Google token provided
+        401:
+          description: Invalid auth token
+        406:
+          description: Invalid quantity provided
+          
+
+
+  /myEvents/future:
+    get:
+      tags: 
+      - myEvents
+      summary: Gets user future events
+      description: Gets the user future events sorted ascending by date
+      operationId: myEventsFutureGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Number of events to fetch
+        required: true
+        schema:
+          $ref: '#/definitions/Quantity'
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+            $ref: '#/definitions/MiniEvent'
+        400:
+          description: Invalid Google token provided
+        401:
+          description: Invalid auth token
+        406:
+          description: Invalid quantity provided
+
+
+
+  /login:
+    post:
+      tags: 
+      - login
+      summary: Register or log in an user
+      description: Using data obtained from Google SSO Auth, the user is created or matched with an existing user
+      operationId: loginPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Data obtained from Google SSO Auth
+        required: true
+        schema:
+          $ref: '#/definitions/LogInInfo'
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+            $ref: '#/definitions/LogInResponse'
+        400:
+          description: Invalid Google token provided
+          
+
+
+  /category:
+    get:
+      tags: 
+      - category
+      summary: Gets all categories
+      description: Gets all stored categories information
+      operationId: categoryGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Category'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    post:
+      tags: 
+      - category
+      summary: Adds a new category
+      description: Adds a new category using data provided 
+      operationId: categoryPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Category entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for category
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+        
+        
+  /category/{id}:
+    get:
+      tags: 
+      - category
+      summary: Gets the category with the given id
+      description: Gets the category with the given id
+      operationId: categoryGET
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Category id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           $ref: '#/definitions/Category'
+        401:
+          description: Invalid auth token
+        404:
+          description: Category with given id does not exist
+      security:
+      - auth_token: []
+
+    put:
+      tags: 
+      - category
+      summary: Updates a category
+      description: Updates the category with the given id and data
+      operationId: categoryPUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Category id
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: Category entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      responses:
+        200:
+          description: Successful Operation
+        401:
+          description: Invalid auth token
+        404:
+          description: Category with given id does not exist
+      security:
+      - auth_token: []
+      
+  
+
+
+
+  /eventType:
+    get:
+      tags: 
+      - eventType
+      summary: Gets all event types
+      description: Gets all stored event types information
+      operationId: eventTypeGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/EventType'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    post:
+      tags: 
+      - eventType
+      summary: Adds a new event type
+      description: Adds a new event type using data provided 
+      operationId: eventTypePOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Event type entity data
+        required: true
+        schema:
+          $ref: '#/definitions/EventType'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event type
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+        
+  /eventType/{id}:
+    get:
+      tags: 
+      - eventType
+      summary: Gets the event type with the given id
+      description: Gets the event type with the given id
+      operationId: eventTypeGET
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Event type id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           $ref: '#/definitions/EventType'
+        401:
+          description: Invalid auth token
+        404:
+          description: Event type with given id does not exist
+      security:
+      - auth_token: []
+
+    put:
+      tags: 
+      - eventType
+      summary: Updates an event type
+      description: Updates the event type with the given id and data
+      operationId: eventTypePUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Event type id
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: EventType entity data
+        required: true
+        schema:
+          $ref: '#/definitions/EventType'
+      responses:
+        401:
+          description: Invalid auth token
+        404:
+          description: Event type with given id does not exist
+      security:
+      - auth_token: []
+
+
+
+  /user:
+    get:
+      tags: 
+      - user
+      summary: Gets all users
+      description: Gets all stored users information
+      operationId: usersGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/User'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+        
+  /user/{email}:
+    get:
+      tags: 
+      - user
+      summary: Gets the user with the given email
+      description: Gets the user with the given email
+      operationId: userGET
+      produces:
+      - application/json
+      parameters:
+      - name: email
+        in: path
+        description: User email
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           $ref: '#/definitions/User'
+        401:
+          description: Invalid auth token
+        404:
+          description: User with given email does not exist
+      security:
+      - auth_token: []
+
+    put:
+      tags: 
+      - user
+      summary: Updates an user
+      description: Updates the user with the given email and data
+      operationId: userPUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: email
+        in: path
+        description: User email
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: User entity data
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        401:
+          description: Invalid auth token
+        404:
+          description: User with given email does not exist
+      security:
+      - auth_token: []
+
+
+
+
+
+  /office:
+    get:
+      tags: 
+      - office
+      summary: Gets all offices
+      description: Gets all stored offices information
+      operationId: officeGETALl
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Office'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    post:
+      tags: 
+      - office
+      summary: Adds a new office
+      description: Adds a new office using data provided 
+      operationId: officePOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Office entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Office'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for office
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+        
+  /office/{id}:
+    get:
+      tags: 
+      - office
+      summary: Gets the office with the given id
+      description: Gets the office with the given id
+      operationId: officeGET
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Office id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           $ref: '#/definitions/Office'
+        401:
+          description: Invalid auth token
+        404:
+          description: Office with given id does not exist
+      security:
+      - auth_token: []
+
+    put:
+      tags: 
+      - office
+      summary: Updates an office
+      description: Updates the office with the given id and data
+      operationId: officePUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Office id
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: Office entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Office'
+      responses:
+        401:
+          description: Invalid auth token
+        404:
+          description: Office with given id does not exist
+      security:
+      - auth_token: []
+      
+  /event:
+    get:
+      tags: 
+      - event
+      summary: Gets all events
+      description: Gets all stored events information
+      operationId: eventGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+        
+    post:
+      tags: 
+      - event
+      summary: Adds a new event
+      description: Adds a new event using data provided 
+      operationId: eventPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Event entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+  /event/{id}:
+    get:
+      tags: 
+      - event
+      summary: Gets a event with the given id
+      description: Gets a event information with the given id
+      operationId: eventGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Event id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    put:
+      tags: 
+      - event
+      summary: Updates a event
+      description: Updates the event with the given id and data
+      operationId: eventPUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Event id
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: Event entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        401:
+          description: Invalid auth token
+        404:
+          description: Category with given id does not exists
+      security:
+      - auth_token: []
+
+  /event/:id/attend:
+    post:
+      tags: 
+      - event
+      summary: Adds a new event
+      description: Adds a new event using data provided 
+      operationId: eventAttendPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Event entity data
+        required: true
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+  /event/past:
+    get:
+      tags: 
+      - event
+      summary: Gets all events from the past
+      description: Gets all stored past events information
+      operationId: eventpastGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+  
+  /event/past/{quantity}:
+    get:
+      tags: 
+      - event
+      summary: Gets a fixed quantity of events from the past
+      description: Gets the quantity of events from the past selected, recovering these past events information
+      operationId: eventpastGETQUANTITY
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: quantity
+        in: path
+        description: Past event recover quantity
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+  /event/future:
+    get:
+      tags: 
+      - event
+      summary: Gets all events from the future
+      description: Gets all stored future events information
+      operationId: eventfutureGETAll
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+  
+  /event/future/{quantity}:
+    get:
+      tags: 
+      - event
+      summary: Gets a fixed quantity of events from the future
+      description: Gets the quantity of events from the future selected, recovering these future events information
+      operationId: eventfutureGETQUANTITY
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: quantity
+        in: path
+        description: Future event recover quantity
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+  /event/recommended/{quantity}:
+    get:
+      tags: 
+      - event
+      summary: Gets a quantity of recommended events
+      description: Gets a quantity of recommended events from the stored future events, retrieving their information
+      operationId: eventrecommendationGETQUANTITY
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: quantity
+        in: path
+        description: Recommended event recover quantity
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/Event'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+
+  /event/search:
+    post:
+      tags: 
+      - event
+      summary: Searchs events using the search/filter criteria given
+      description: Searchs and returns events using the search/filter criteria given
+      operationId: eventSearchPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchCriteria
+        description: Search/filter criteria data
+        required: true
+        schema:
+          $ref: '#/definitions/SearchCriteria'
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/MiniEvent'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+
+
+  /eventMedia:
+    get:
+      tags: 
+      - eventMedia
+      summary: Gets all the media elements
+      description: Gets all the media information with the given id
+      operationId: eventMediaGETALL
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/EventMedia'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    post:
+      tags: 
+      - eventMedia
+      summary: Adds a new media element
+      description: Adds a new media element using data provided 
+      operationId: eventMediaPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: EventMedia entity data
+        required: true
+        schema:
+          $ref: '#/definitions/EventMedia'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for media element
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+  /eventMedia/{id}:
+    get:
+      tags: 
+      - eventMedia
+      summary: Gets a media element with the given id
+      description: Gets a media information with the given id
+      operationId: eventMediaGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: EventMedia id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/EventMedia'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+  /eventGroup:
+    get:
+      tags: 
+      - eventGroup
+      summary: Gets all the event groups
+      description: Gets all the event groups
+      operationId: eventGroupGETALL
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event group
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+    post:
+      tags: 
+      - eventGroup
+      summary: Adds a new event group
+      description: Adds a new event group using data provided 
+      operationId: eventGroupPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: EventGroup entity data
+        required: true
+        schema:
+          $ref: '#/definitions/EventGroup'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event group
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+      
+  /eventGroup/{id}:
+    get:
+      tags: 
+      - eventGroup
+      summary: Gets a event group with the given id
+      description: Gets a event group information with the given id
+      operationId: eventgroupGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: EventGroup id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful Operation
+          schema:
+           type: array
+           items:
+              $ref: '#/definitions/EventGroup'
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+  
+    put:
+      tags: 
+      - eventGroup
+      summary: Updates a event group
+      description: Updates a event group using data provided 
+      operationId: eventGroupPUT
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: EventGroup id
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: EventGroup entity data
+        required: true
+        schema:
+          $ref: '#/definitions/EventGroup'
+      responses:
+        200:
+          description: Successful Operation
+        400:
+          description: Invalid data provided for event group
+        401:
+          description: Invalid auth token
+      security:
+      - auth_token: []
+
+
+securityDefinitions:
+  auth_token:
+    type: apiKey
+    name: auth_token
+    in: header
+    
+definitions:
+
+  LogInInfo:
+    required:
+    - name
+    - email
+    - photoBase64
+    - googleToken
+    type: object
+    properties:
+      name:
+        type: string
+        example: "User name"
+      email:
+        type: string
+        example: "username@konradgroup.com"
+      photo_base64:
+        type: string
+        example: "url?"
+      googleToken:
+        type: string
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    xml:
+      name: LogInInfo
+      
+  LogInResponse:
+    required:
+    - authToken
+    - expDate
+    - newUser
+    type: object
+    properties:
+      authToken:
+        type: string
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      expDate:
+        type: string
+        example: "03/04/2021"
+      newUser:
+        type: boolean
+        example: true
+    xml:
+      name: LogInResponse
+      
+  User:
+    required:
+    - email
+    - name
+    - profilePicture
+    - isAdmin
+    - favCategories
+    - favEventTypes
+    - office
+    - globalEvents
+    - events
+    - notifyEvents 
+    - eventGroups 
+    - favMedia 
+    properties:
+      email:
+        type: string
+        format: email
+        example: username@konradgroup.com
+      name:
+        type: string
+        example: username
+      profilePicture:
+        type: string
+        format: url
+        example: https://linkphoto.com
+      isAdmin:
+        type: boolean
+        example: false
+      favCategories:
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+      favEventTypes:
+        type: array
+        items:
+          $ref: '#/definitions/EventType'
+      office:
+        $ref: '#/definitions/Office'
+      globalEvents:
+        type: boolean
+        example: true
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/Event'
+      notifyEvents:
+        type: array
+        items:
+          $ref: '#/definitions/Event'
+      eventGroups:
+        type: array
+        items:
+          $ref: '#/definitions/EventGroup'
+      favMedia:
+        type: array
+        items:
+          $ref: '#/definitions/EventMedia'
+
+  Category:
+    required:
+    - id
+    - name
+    - icon
+    - colorHex
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Yoga"
+      icon:
+        type: string
+        format: url
+        example: https://linkicon.com
+      colorHex:
+        type: string
+        example: #FFFFFF
+        
+  EventType:
+    required:
+    - id
+    - name
+    - categories
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Power Hour"
+      categories:
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+        
+  Office:
+    required:
+    - id
+    - name
+    - active
+    - location
+    - thumbnail
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "San Jose"
+      active:
+        type: boolean
+        example: true
+      location:
+        type: string
+        format: url
+        example:  https://maps.com
+      thumbnail:
+        type: string
+        format: url
+        example:  https://linkphoto.com
+  
+  Event:
+    required:
+    - id 
+    - name 
+    - summary 
+    - description 
+    - startDate 
+    - endDate 
+    - eventTypes 
+    - categories 
+    - thumbnail
+    - bannerImg 
+    - isCancelled 
+    - isVisible 
+    - hasCountdown 
+    - isGlobal 
+    - offices 
+    - location 
+    - attendance 
+    - invited 
+    - gallery 
+    - completed 
+    - group 
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Town Hall August"
+      summary: 
+        type: string
+      description: 
+        type: string
+      startDate: 
+        type: string #DateTime
+      endDate: 
+        type: string #DateTime
+      eventTypes:  
+        type: array
+        items:
+          $ref: '#/definitions/EventType'
+      categories:  
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+      thumbnail:  
+        type: string
+      bannerImg:  
+        type: string
+      cancelMsg:  
+        type: string
+        example: null
+      isCancelled:  
+        type: boolean
+        example: false
+      isVisible: 
+        type: boolean 
+        example: true
+      hasCountdown: 
+        type: boolean 
+        example: false
+      isGlobal: 
+        type:  boolean
+        example: false
+      offices:  
+        type: array
+        items:
+          $ref: '#/definitions/Office'
+      location:  
+        type: string
+      meetingLink: 
+        type: string 
+        example: null
+      form: 
+        type: string
+        example: null
+      attendance:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      invited:  
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      gallery:  
+        type: array
+        items:
+          $ref: '#/definitions/EventMedia'
+      completed:  
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      video:
+        type: string
+        example: null
+      group: 
+        $ref: '#/definitions/EventGroup'
+    
+    
+  EventGroup:
+    required:
+    - id 
+    - name 
+    - sessions 
+    - schedule #: {startDate, endDate, daysOfWeek, startHour, endHour}
+    - isCancelled 
+    - isVisible 
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Yoga Sessions"
+      sessions:
+        type: array
+        items:
+          $ref: '#/definitions/Event' 
+      schedule:
+        type: string # JSON
+      isCancelled:
+        type: boolean
+        example: false
+      isVisible:
+        type: boolean
+        example: true
+    
+  
+  EventMedia:
+    required:
+    - id 
+    - mediaSrc 
+    - event 
+    - author
+    properties:
+      id: 
+        type: integer
+      mediaSrc:
+        type: string
+      event: 
+        $ref: '#/definitions/Event'
+      author: 
+        $ref: '#/definitions/User'
+
+
+  MiniEvent:
+    required:
+    - id 
+    - name 
+    - summary 
+    - startDate  
+    - thumbnail
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Town Hall August"
+      summary: 
+        type: string
+      startDate: 
+        type: string #DateTime
+      thumbnail:  
+        type: string
+        
+  Quantity:
+    required:
+    - quantity
+    properties:
+      quantity:
+        type: integer
+        example: 1
+        
+  SearchCriteria:
+    required:
+    - quantity
+    properties:
+      quantity:
+        type: integer
+        example: 1
+      startDate:
+        type: string
+        example: "01/01/2021"
+      endDate:
+        type: string
+        example: "01/01/2021"
+      categories: 
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+      offices: 
+        type: array
+        items:
+          $ref: '#/definitions/Office'
+
+      
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /KGSocialHub/KGSocialHub/1.0.0
+schemes:
+ - https
+ - http

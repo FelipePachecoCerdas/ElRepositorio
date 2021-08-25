@@ -1,9 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import ApiDoc from './ApiDoc'
 
 export default function Home() {
   return (
+        <ApiDoc/>
+    /*
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -65,5 +68,6 @@ export default function Home() {
         </a>
       </footer>
     </div>
+    */
   )
 }
