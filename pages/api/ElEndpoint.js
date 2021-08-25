@@ -14,7 +14,7 @@ const applyCors = (handler) => (req, res) => {
 }
 
 export async function handler(req, res) {
-  return res.status(200).json({ Soy: 'El Endpoint' });
+  return res.status(200).json({ soy: 'El Endpoint' });
 }
 
 export default applyCors(handler);
